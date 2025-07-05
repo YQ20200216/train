@@ -15,6 +15,7 @@ int main() {
 
     // 配置服务器地址
     struct sockaddr_in server_addr;
+    std::memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(8080);
@@ -38,6 +39,7 @@ int main() {
     while(true) {
         // 接受连接
         struct sockaddr_in client_addr;
+        std::memset(&client_addr, 0, sizeof(client_addr));
         socklen_t client_addr_len = sizeof(client_addr);
         int client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &client_addr_len);
         if (client_fd == -1) {
