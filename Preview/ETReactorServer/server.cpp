@@ -73,7 +73,7 @@ int main() {
                 }
 
                 setNonBlocking(client_fd);
-                event.events = EPOLLIN | EPOLLET;
+                event.events = EPOLLIN | EPOLLET; // 设置为边缘触发模式
                 event.data.fd = client_fd;
                 if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_fd, &event) < 0) {
                     std::cerr << "Failed to add client fd to epoll" << std::endl;
@@ -95,6 +95,7 @@ int main() {
                     while (true) { // 必须循环读取直到EAGAIN
                         ssize_t bytes_read = recv(events[i].data.fd, buffer, BUFFER_SIZE, 0);
                         if (bytes_read < 0) {
+                            // 这里要判断是否是EAGAIN或EWOULDBLOCK
                             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                                 break; // 数据已读完
                             }
